@@ -1,0 +1,7 @@
+************************ reconfiguration cycle 0 ************************
+reconfigure interface gpon-port 0-3
+    GPON-port 0 reconfigured successfully
+    GPON-port 1 reconfigured successfully
+    GPON-port 2 reconfigured successfully
+    GPON-port 3 reconfigured successfully
+LTP-4X# 

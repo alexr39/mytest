@@ -1,0 +1,66 @@
+configure terminal
+profile cross-connect "IMS-ERCS"
+description "For IMS ont Ericsson"
+bridge
+bridge group "5"
+outer vid "1101"
+user vid "1101"
+type "voice"
+exit
+profile cross-connect "HSI-ERCS"
+description "For HSI ont Ericsson"
+outer vid "3200"
+user vid "3200"
+exit
+profile cross-connect "IPTV-ERCS"
+description "For IPTV ont Ericsson"
+bridge
+bridge group "15"
+outer vid "2149"
+exit
+profile ports "IM00"
+description "Ports mask: IM00"
+igmp multicast dynamic-entry    0 vid "30"
+igmp multicast dynamic-entry    0 group "224.0.0.1" "239.255.255.255"
+port 0 bridge group "10"
+port 0 remove-tag
+port 1 bridge group "15"
+port 1 multicast
+port 1 igmp upstream vid "2149"
+port 1 igmp upstream tag-control add-tag
+port 1 igmp downstream tag-control remove-tag
+exit
+profile voice "voice-00-ERCS"
+sip proxy "192.168.101.2"
+sip domain "192.168.101.2"
+sip outbound-proxy "192.168.101.2"
+exit
+vlan 30
+name MC_VLAN
+tagged port-channel 1
+tagged slot-channel 5
+ip igmp snooping mrouter add port-channel 1
+ip igmp snooping querier enable
+ip igmp snooping querier address 192.168.0.30
+exit
+vlan 30
+tagged plc-pon-port 5/0
+tagged plc-slot-channel 5/0
+exit
+vlan 1101
+name FOR_VOICE
+tagged port-channel 1
+exit
+vlan 3200
+name LOCAL_HSI_SERVER
+tagged front-port 1/1
+exit
+vlan 2149
+name FOR_STB
+tagged port-channel 1
+exit
+ip igmp snooping enable
+ip igmp proxy report enable
+ip igmp proxy report range 224.0.0.1 239.255.255.255 from all to 30
+
+
